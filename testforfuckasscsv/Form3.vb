@@ -1,36 +1,45 @@
 Public Class Form3
-    ' Form3 displays seat information: SeatNumber and SeatClass
-    ' All data is retrieved from the shared PassengerData (CSV)
+    ' Form3: Airline Selection
+    ' Populates listbox with airlines from CSV matching the flight type
+    ' Validates selected airline against CSV Airline field
     
     Private Sub Form3_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        ' Retrieve seat information from the shared passenger data
-        Dim seatNumber As String = GetPassengerField(SEAT_NUMBER_INDEX)
-        Dim seatClass As String = GetPassengerField(SEAT_CLASS_INDEX)
-        
-        ' Display seat number
-        lblSeatNumber.Text = "Seat Number: " & seatNumber
-        
-        ' Display seat class
-        lblSeatClass.Text = "Seat Class: " & seatClass
-        
-        ' Display passenger name for reference
-        lblPassengerName.Text = "Passenger: " & GetPassengerField(PASSENGER_NAME_INDEX)
+        ' Populate airline listbox with CSV data for this flight type
+        lstAirlinesDom.Items.Clear()
+        lstAirlinesDom.Items.Add(GetPassengerField(AIRLINE_INDEX))
+    End Sub
+    
+    Private Sub lstAirlinesDom_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lstAirlinesDom.SelectedIndexChanged
+        ' Clear any previous warning when selection changes
+        lblAirlineWarning.Text = ""
     End Sub
     
     Private Sub btnContinue_Click(sender As Object, e As EventArgs) Handles btnContinue.Click
-        ' Navigate to Form4 (Meal Selection)
-        Me.Hide()
-        Form4.Show()
+        ' Validate that an airline was selected
+        If lstAirlinesDom.SelectedIndex = -1 Then
+            lblAirlineWarning.Text = "Please select an airline from the list."
+            lblAirlineWarning.ForeColor = Color.Red
+            Return
+        End If
+        
+        ' Get selected airline
+        Dim selectedAirline As String = lstAirlinesDom.SelectedItem.ToString()
+        
+        ' Validate selected airline against CSV
+        If String.Equals(selectedAirline, GetPassengerField(AIRLINE_INDEX), StringComparison.OrdinalIgnoreCase) Then
+            ' Airline matches CSV: proceed to Form4
+            Me.Hide()
+            Form4.Show()
+        Else
+            ' Airline mismatch with CSV
+            lblAirlineWarning.Text = "Selected airline '" & selectedAirline & "' does not match the airline in our system: '" & GetPassengerField(AIRLINE_INDEX) & "'. Please reselect."
+            lblAirlineWarning.ForeColor = Color.Red
+        End If
     End Sub
     
     Private Sub btnBack_Click(sender As Object, e As EventArgs) Handles btnBack.Click
         ' Return to Form2
         Me.Hide()
         Form2.Show()
-    End Sub
-    
-    Private Sub lstAirlinesDom_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lstAirlinesDom.SelectedIndexChanged
-        ' This control is not used in the data-driven version
-        ' It's kept for design compatibility
     End Sub
 End Class

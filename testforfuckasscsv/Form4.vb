@@ -1,35 +1,68 @@
 Public Class Form4
-    ' Form4 displays meal information and enables/disables upgrade options
-    ' based on the UpgradeAvailable value from the CSV (without any hard-coded conditions)
+    ' Form4: Flight Details Verification
+    ' Displays and verifies: Departure Time, Arrival Time, Gate, Terminal, Airline
+    ' All data read from CSV and validated
     
     Private Sub Form4_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        ' Retrieve meal information from the shared passenger data
-        Dim selectedMeal As String = GetPassengerField(MEAL_INDEX)
+        ' Clear listbox and populate with flight details
+        lstAirlineInt.Items.Clear()
         
-        ' Display the selected meal
-        lblMeal.Text = "Selected Meal: " & selectedMeal
-        
-        ' Retrieve the upgrade availability status from CSV
-        Dim upgradeAvailable As String = GetPassengerField(UPGRADE_AVAILABLE_INDEX)
-        
-        ' Display passenger name for reference
-        lblPassengerName.Text = "Passenger: " & GetPassengerField(PASSENGER_NAME_INDEX)
-        
-        ' Enable or disable the Business Upgrade radio button based on CSV value
-        ' The value is compared as-is from the CSV (case-insensitive)
-        If String.Equals(upgradeAvailable, "Yes", StringComparison.OrdinalIgnoreCase) Then
-            ' Upgrade is available: enable the radio button
-            radBusinessUpgrade.Enabled = True
-            radBusinessUpgrade.Text = "Business Class Upgrade (Available)"
-        Else
-            ' Upgrade is not available: disable the radio button
-            radBusinessUpgrade.Enabled = False
-            radBusinessUpgrade.Text = "Business Class Upgrade (Not Available)"
-        End If
+        ' Add flight details to listbox
+        lstAirlineInt.Items.Add("Airline: " & GetPassengerField(AIRLINE_INDEX))
+        lstAirlineInt.Items.Add("Departure: " & GetPassengerField(DEPARTURE_TIME_INDEX))
+        lstAirlineInt.Items.Add("Arrival: " & GetPassengerField(ARRIVAL_TIME_INDEX))
+        lstAirlineInt.Items.Add("Gate: " & GetPassengerField(GATE_INDEX))
+        lstAirlineInt.Items.Add("Terminal: " & GetPassengerField(TERMINAL_INDEX))
+    End Sub
+    
+    Private Sub lstAirlineInt_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lstAirlineInt.SelectedIndexChanged
+        ' Clear any previous warning when selection changes
+        lblAirlineWarning.Text = ""
     End Sub
     
     Private Sub btnContinue_Click(sender As Object, e As EventArgs) Handles btnContinue.Click
-        ' Navigate to Form5 (Boarding Pass)
+        ' Validate that user confirms the flight details
+        ' In this context, the "selection" is confirmation of all details
+        
+        ' Verify that the passenger data is properly loaded
+        If PassengerData Is Nothing Then
+            lblAirlineWarning.Text = "Error: Flight data not loaded. Please return and re-enter your flight code."
+            lblAirlineWarning.ForeColor = Color.Red
+            Return
+        End If
+        
+        ' Verify critical fields exist and are not empty
+        If String.IsNullOrWhiteSpace(GetPassengerField(AIRLINE_INDEX)) Then
+            lblAirlineWarning.Text = "Error: Airline information is missing from our system."
+            lblAirlineWarning.ForeColor = Color.Red
+            Return
+        End If
+        
+        If String.IsNullOrWhiteSpace(GetPassengerField(DEPARTURE_TIME_INDEX)) Then
+            lblAirlineWarning.Text = "Error: Departure time is missing from our system."
+            lblAirlineWarning.ForeColor = Color.Red
+            Return
+        End If
+        
+        If String.IsNullOrWhiteSpace(GetPassengerField(ARRIVAL_TIME_INDEX)) Then
+            lblAirlineWarning.Text = "Error: Arrival time is missing from our system."
+            lblAirlineWarning.ForeColor = Color.Red
+            Return
+        End If
+        
+        If String.IsNullOrWhiteSpace(GetPassengerField(GATE_INDEX)) Then
+            lblAirlineWarning.Text = "Error: Gate information is missing from our system."
+            lblAirlineWarning.ForeColor = Color.Red
+            Return
+        End If
+        
+        If String.IsNullOrWhiteSpace(GetPassengerField(TERMINAL_INDEX)) Then
+            lblAirlineWarning.Text = "Error: Terminal information is missing from our system."
+            lblAirlineWarning.ForeColor = Color.Red
+            Return
+        End If
+        
+        ' All validations passed: proceed to Form5
         Me.Hide()
         Form5.Show()
     End Sub
@@ -38,10 +71,5 @@ Public Class Form4
         ' Return to Form3
         Me.Hide()
         Form3.Show()
-    End Sub
-    
-    Private Sub lstAirlineInt_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lstAirlineInt.SelectedIndexChanged
-        ' This control is not used in the data-driven version
-        ' It's kept for design compatibility
     End Sub
 End Class
