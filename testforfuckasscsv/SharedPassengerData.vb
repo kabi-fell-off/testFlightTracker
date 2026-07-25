@@ -10,8 +10,8 @@ Module SharedPassengerData
     ' Index 16: UpgradeAvailable, 17: Weather
     Public PassengerData() As String = Nothing
     
-    ' Path to the CSV file
-    Public Const CSV_FILE_PATH As String = "Flights.csv"
+    ' Path to the CSV file - uses application's running directory
+    Public ReadOnly CSV_FILE_PATH As String = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Flights.csv")
     
     ' CSV Header indices (for reference and validation)
     Public Const FLIGHT_CODE_INDEX As Integer = 0
@@ -42,7 +42,7 @@ Module SharedPassengerData
         Try
             ' Check if the CSV file exists
             If Not System.IO.File.Exists(CSV_FILE_PATH) Then
-                MessageBox.Show("Error: Flights.csv file not found. Please ensure Flights.csv is in the application directory.", "File Not Found", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show("Error: Flights.csv file not found at: " & CSV_FILE_PATH & vbCrLf & vbCrLf & "Please ensure Flights.csv is in the application directory.", "File Not Found", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 Return False
             End If
             
@@ -58,7 +58,7 @@ Module SharedPassengerData
             ' Skip the header row (index 0) and search the remaining rows
             For i As Integer = 1 To allLines.Length - 1
                 ' Split the line by comma to extract individual fields
-                Dim fields() As String = allLines(i).Split(New Char() {<char>(",")</char>c}, StringSplitOptions.None)
+                Dim fields() As String = allLines(i).Split(New Char() {","c}, StringSplitOptions.None)
                 
                 ' Trim whitespace from the flight code field
                 Dim csvFlightCode As String = fields(FLIGHT_CODE_INDEX).Trim()
