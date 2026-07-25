@@ -1,0 +1,6 @@
+FlightCode,PassengerName,FlightType,Airline,Origin,Destination,FlightDate,Terminal,Gate,BoardingTime,DepartureTime,ArrivalTime,Duration,SeatClass,SeatNumber,Meal,UpgradeAvailable,Weather
+QF410,John Smith,International,Qantas Airways,Sydney,London,2026-08-15,T1,B42,14:00,14:30,05:15+1,20h45m,Business,1A,Vegetarian,Yes,Clear
+BA285,Sarah Johnson,Domestic,British Airways,London,Paris,2026-08-20,T2,C15,09:30,10:00,12:15,2h15m,Economy,15C,Standard,No,Partly Cloudy
+AF127,Michael Chen,International,Air France,Paris,Tokyo,2026-08-25,T3,D08,16:45,17:15,09:30+1,12h15m,Premium Economy,22B,Halal,Yes,Rainy
+LH540,Emma Watson,Domestic,Lufthansa,Berlin,Munich,2026-09-01,T1,A32,11:00,11:30,13:00,1h30m,Business,5D,Kosher,Yes,Clear
+UA892,Robert Brown,International,United Airlines,New York,San Francisco,2026-09-05,T4,E20,18:00,18:30,21:45,5h45m,Economy,42F,Standard,No,Cloudy
